@@ -1,4 +1,4 @@
-export default class Reflection {
+module.exports = class Reflection {
 
   static getFunctionNameFromKey(key, seperator = '.', first = false) {
     const splits = key.split(seperator);
