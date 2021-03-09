@@ -4,7 +4,7 @@ module.exports = class PenclBoot {
 
   constructor(path = null, config = null) {
     this.path = path;
-    this.config = null;
+    this.config = {};
 
     if (this.path) {
       const file = FileUtil.findFileRoot(this.path, 'pencl.js');

@@ -9,7 +9,8 @@ module.exports = class PenclPlugin {
   static get config() {}
 
   constructor() {
-    this._config = Boot.getConfig(this.name) || this.constructor.config;
+    this.config = Boot.getConfig(this.name, this.constructor.config);
+    this.pencl = Boot.getConfig('pencl', {});
   }
 
   /** @returns {string} */
@@ -17,14 +18,9 @@ module.exports = class PenclPlugin {
     return this.constructor.name;
   }
 
-  /** @returns {object} */
-  get config() {
-    return this._config;
-  }
-
   /** @returns {boolean} */
   get debug() {
-    return Boot.getConfig('system', {}).debug || this.config.debug || false;
+    return this.pencl.debug || this.config.debug || false;
   }
 
 }
