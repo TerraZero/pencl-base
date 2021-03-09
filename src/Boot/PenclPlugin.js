@@ -24,7 +24,7 @@ module.exports = class PenclPlugin {
 
   /** @returns {boolean} */
   get debug() {
-    return Boot.getConfig('system', {}).debug || this.config.debug;
+    return Boot.getConfig('system', {}).debug || this.config.debug || false;
   }
 
 }
