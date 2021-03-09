@@ -1,6 +1,6 @@
 const PenclBoot = require('./src/Boot/PenclBoot');
 
-module.exports = function boot(path = null, settings = null) {
-  module.exports = new PenclBoot(path, settings);
+module.exports = function boot(path = null, config = null) {
+  module.exports = new PenclBoot(path, config);
   return module.exports;
 };
