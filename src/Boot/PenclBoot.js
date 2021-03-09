@@ -1,7 +1,8 @@
 module.exports = class PenclBoot {
 
-  constructor(path) {
+  constructor(path, settings = {}) {
     this.path = path;
+    this.settings = settings;
   }
 
   async boot() {
@@ -9,7 +10,7 @@ module.exports = class PenclBoot {
   }
 
   getConfig(name) {
-    return null;
+    return this.settings[name] || null;
   }
 
 }
