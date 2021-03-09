@@ -8,4 +8,8 @@ module.exports = class PenclBoot {
     
   }
 
+  getConfig(name) {
+    return null;
+  }
+
 }
