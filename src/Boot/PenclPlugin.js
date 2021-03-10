@@ -6,7 +6,9 @@ module.exports = class PenclPlugin {
   static get name() {}
 
   /** @returns {object} */
-  static get config() {}
+  static get config() {
+    return {};
+  }
 
   constructor() {
     this.config = Boot.getConfig(this.name, this.constructor.config);
