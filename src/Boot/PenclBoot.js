@@ -5,7 +5,7 @@ module.exports = class PenclBoot {
 
   constructor(path = null, config = null) {
     this.path = path;
-    this.root = config.root || null;
+    this.root = config && config.root || null;
     this.config = {};
 
     if (this.path) {
