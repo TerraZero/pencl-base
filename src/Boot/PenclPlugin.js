@@ -11,10 +11,10 @@ module.exports = class PenclPlugin {
     return {};
   }
 
-  static get LOG_DEBUG() {return 1;};
-  static get LOG_NOTICE() {return 2;};
-  static get LOG_WARNING() {return 3;};
-  static get LOG_ERROR() {return 4;};
+  get LOG_DEBUG() {return 1;};
+  get LOG_NOTICE() {return 2;};
+  get LOG_WARNING() {return 3;};
+  get LOG_ERROR() {return 4;};
 
   constructor() {
     this.config = Boot.getConfig(this.name, this.constructor.config);
