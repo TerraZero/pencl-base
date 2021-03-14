@@ -3,31 +3,32 @@ const Reflection = require('../Util/Reflection');
 
 module.exports = class PenclPlugin {
 
-  /** @returns {string} */
-  static get name() {}
-
-  /** @returns {object} */
-  static get config() {
-    return {};
-  }
-
   get LOG_DEBUG() {return 1;};
   get LOG_NOTICE() {return 2;};
   get LOG_WARNING() {return 3;};
   get LOG_ERROR() {return 4;};
 
   constructor() {
-    this.config = Boot.getConfig(this.name, this.config);
+    Object.defineProperty(this, 'config', {
+      value: Boot.getConfig(this.name, this.config),
+    });
     this.pencl = Boot.getConfig('pencl', {});
 
     Boot.hook('init', this);
   }
 
+  /**
+   * @abstract
+   * @returns {object} 
+   */
   get config() {
     return {};
   }
 
-  /** @returns {string} */
+  /** 
+   * @abstract
+   * @returns {string} 
+   */
   get name() {
     return this.constructor.name;
   }
