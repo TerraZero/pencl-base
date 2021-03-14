@@ -17,10 +17,14 @@ module.exports = class PenclPlugin {
   get LOG_ERROR() {return 4;};
 
   constructor() {
-    this.config = Boot.getConfig(this.name, this.constructor.config);
+    this.config = Boot.getConfig(this.name, this.config);
     this.pencl = Boot.getConfig('pencl', {});
 
     Boot.hook('init', this);
+  }
+
+  get config() {
+    return {};
   }
 
   /** @returns {string} */
