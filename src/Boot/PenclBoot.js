@@ -39,21 +39,35 @@ module.exports = class PenclBoot {
   /**
    * @param {(string|array)} events 
    * @param  {...any} args 
+   * @returns {this}
    */
   trigger(events, ...args) {
     if (typeof events === 'string') events = [events];
     for (const event in events) {
       this.handler.emit(event, ...args);
     }
+    return this;
   }
 
   /**
    * @param {string} hook
    * @param {import('./PenclPlugin')} plugin 
    * @param {...*} args
+   * @returns {this}
    */
   hook(hook, plugin, ...args) {
     this.trigger([hook + ':' + plugin.name, hook], plugin, ...args);
+    return this;
+  }
+
+  /**
+   * @param {string} event 
+   * @param {function} listener 
+   * @returns {this}
+   */
+  on(event, listener) {
+    this.handler.on(event, listener);
+    return this;
   }
 
   /**
