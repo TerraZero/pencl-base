@@ -43,7 +43,7 @@ module.exports = class PenclBoot {
    */
   trigger(events, ...args) {
     if (typeof events === 'string') events = [events];
-    for (const event in events) {
+    for (const event of events) {
       this.handler.emit(event, ...args);
     }
     return this;
