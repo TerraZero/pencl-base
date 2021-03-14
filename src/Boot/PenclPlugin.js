@@ -19,6 +19,8 @@ module.exports = class PenclPlugin {
   constructor() {
     this.config = Boot.getConfig(this.name, this.constructor.config);
     this.pencl = Boot.getConfig('pencl', {});
+
+    Boot.hook('init', this);
   }
 
   /** @returns {string} */

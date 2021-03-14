@@ -1,5 +1,6 @@
 const FileUtil = require("../Util/FileUtil");
 const Path = require('path');
+const Handler = require('events');
 
 module.exports = class PenclBoot {
 
@@ -7,6 +8,7 @@ module.exports = class PenclBoot {
     this.path = path;
     this.root = config && config.root || null;
     this.config = {};
+    this.handler = new Handler();
 
     if (this.path) {
       const file = FileUtil.findFileRoot(this.path, 'pencl.json');
@@ -23,7 +25,35 @@ module.exports = class PenclBoot {
   }
 
   async boot() {
-    
+    const config = this.getConfig('pencl', {});
+    if (Array.isArray(config.modules)) {
+      for (const module of config.modules) {
+        try {
+          const penclhook = require(module + '/penclhook');
+          penclhook(this);
+        } catch (e) {}
+      }
+    }
+  }
+
+  /**
+   * @param {(string|array)} events 
+   * @param  {...any} args 
+   */
+  trigger(events, ...args) {
+    if (typeof events === 'string') events = [events];
+    for (const event in events) {
+      this.handler.emit(event, ...args);
+    }
+  }
+
+  /**
+   * @param {string} hook
+   * @param {import('./PenclPlugin')} plugin 
+   * @param {...*} args
+   */
+  hook(hook, plugin, ...args) {
+    this.trigger([hook + ':' + plugin.name, hook], plugin, ...args);
   }
 
   /**
