@@ -7,14 +7,15 @@ module.exports = class PenclBoot {
   constructor(path = null, config = null) {
     this.path = path;
     this.root = config && config.root || null;
+    this.file = null;
     this.config = {};
     this.handler = new Handler();
 
     if (this.path) {
-      const file = FileUtil.findFileRoot(this.path, 'pencl.json');
-      if (file) {
-        this.root = this.root || Path.dirname(file);
-        this.config = require(file);
+      this.file = FileUtil.findFileRoot(this.path, 'pencl.json');
+      if (this.file) {
+        this.root = this.root || Path.dirname(this.file);
+        this.config = require(this.file);
       }
     }
     if (config) {
