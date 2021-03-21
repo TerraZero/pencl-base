@@ -14,7 +14,7 @@ module.exports = class PenclPlugin {
     });
     this.pencl = Boot.getConfig('pencl', {});
 
-    Boot.hook('init', this);
+    Boot.triggerSync(['init:' + this.name, 'init'], this);
   }
 
   /**
@@ -38,12 +38,16 @@ module.exports = class PenclPlugin {
     return this.pencl.debug || this.config.debug || false;
   }
 
+  /** @returns {number} */
   get logLevel() {
     return this.pencl.log_level || this.config.log_level || 2;
   }
 
+  async hook(name, ...args) {
+    await Boot.hook(name, this, ...args);
+  }
+
   /**
-   * 
    * @param {string} message 
    * @param {(object|Array)} placeholders 
    * @param {string} type 
@@ -69,5 +73,10 @@ module.exports = class PenclPlugin {
       console.log('[' + type + ']: ' + message);
     }
   }
+
+  /**
+   * @param {import('pencl-cli-launcher/src/CLIForm')} cliForm 
+   */
+  getConfigForm(cliForm) {}
 
 }

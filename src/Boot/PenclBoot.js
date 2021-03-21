@@ -27,21 +27,22 @@ module.exports = class PenclBoot {
   async boot() {
     const config = this.getConfig('pencl', {});
     if (Array.isArray(config.modules)) {
+
       for (const module of config.modules) {
         try {
-          const penclhook = require(module + '/penclhook');
-          penclhook(this);
+          require(module + '/pencl.hook')(this);
         } catch (e) {}
       }
     }
+    await this.trigger('boot', this);
   }
 
-  /**
+   /**
    * @param {(string|array)} events 
    * @param  {...any} args 
    * @returns {this}
    */
-  trigger(events, ...args) {
+  triggerSync(events, ...args) {
     if (typeof events === 'string') events = [events];
     for (const event of events) {
       this.handler.emit(event, ...args);
@@ -50,14 +51,29 @@ module.exports = class PenclBoot {
   }
 
   /**
+   * @param {(string|array)} events 
+   * @param  {...any} args 
+   * @returns {Promise<this>}
+   */
+  async trigger(events, ...args) {
+    if (typeof events === 'string') events = [events];
+    for (const event of events) {
+      await (new Promise((resolve) => {
+        this.handler.once(event, resolve);
+        this.handler.emit(event, ...args);
+      }));
+    }
+    return this;
+  }
+
+  /**
    * @param {string} hook
    * @param {import('./PenclPlugin')} plugin 
    * @param {...*} args
-   * @returns {this}
+   * @returns {Promise<this>}
    */
-  hook(hook, plugin, ...args) {
-    this.trigger([hook + ':' + plugin.name, hook], plugin, ...args);
-    return this;
+  async hook(hook, plugin, ...args) {
+    return this.trigger([hook + ':' + plugin.name, hook], plugin, ...args);
   }
 
   /**
