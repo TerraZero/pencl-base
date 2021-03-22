@@ -1,6 +1,7 @@
 const FileUtil = require("../Util/FileUtil");
 const Path = require('path');
 const Handler = require('events');
+const FS = require('fs');
 
 module.exports = class PenclBoot {
 
@@ -18,9 +19,16 @@ module.exports = class PenclBoot {
         this.config = require(this.file);
       }
     }
-    if (config) {
-      for (const index in config) {
-        this.config[index] = config[index];
+    this.loadConfig(config);
+  }
+
+  loadConfig(config) {
+    for (const index in config) {
+      this.config[index] = config[index];
+    }
+    if (config.includeConfigs && Array.isArray(config.includeConfigs)) {
+      for (const path of config.includeConfigs) {
+        if (FS.existsSync(path)) this.loadConfig(require(path));
       }
     }
   }
