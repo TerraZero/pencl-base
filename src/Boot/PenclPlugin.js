@@ -43,6 +43,10 @@ module.exports = class PenclPlugin {
     return this.pencl.log_level || this.config.log_level || 2;
   }
 
+  /**
+   * @param {string} name 
+   * @param  {...any} args 
+   */
   async hook(name, ...args) {
     await Boot.hook(name, this, ...args);
   }
@@ -51,10 +55,10 @@ module.exports = class PenclPlugin {
    * @param {string} message 
    * @param {(object|Array)} placeholders 
    * @param {string} type 
-   * @param {boolean} save 
+   * @param {boolean} save (needs plugin pencl-database-events)
    */
   log(message, placeholders = {}, type = PenclPlugin.LOG_NOTICE, save = true) {
-    message = Reflection.replaceMessage(message, placeholders, '"');
+    const statement = Reflection.replaceMessage(message, placeholders, '"');
     if (this.debug || type >= this.logLevel) {
       switch (type) {
         case PenclPlugin.LOG_DEBUG: 
@@ -70,7 +74,18 @@ module.exports = class PenclPlugin {
           type = 'ERROR';
           break;
       }
-      console.log('[' + type + ']: ' + message);
+      console.log('[' + type + ']: ' + statement);
+    }
+    if (save) {
+      this.hook('database:record', {
+        table: 'logs',
+        fields: {
+          statement: '[' + type + ']: ' + statement,
+          message,
+          placeholders,
+          type,
+        },
+      });
     }
   }
 

@@ -1,4 +1,4 @@
-const FileUtil = require("../Util/FileUtil");
+const FileUtil = require('../Util/FileUtil');
 const Path = require('path');
 const Handler = require('events');
 const FS = require('fs');
@@ -20,6 +20,10 @@ module.exports = class PenclBoot {
       }
     }
     this.loadConfig(config);
+
+    process.on('beforeExit', (...args) => {
+      this.triggerSync('exit', ...args);
+    });
   }
 
   loadConfig(config) {
