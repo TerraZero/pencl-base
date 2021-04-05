@@ -30,8 +30,9 @@ module.exports = class FileUtil {
    */
   static copyPath(from, to, callback = null) {
     if (FS.statSync(from).isFile()) {
-      if (callback) callback(Path.join(to, Path.basename(from)), from, false);
+      if (callback) callback(from, Path.join(to, Path.basename(from)), false);
       FS.writeFileSync(Path.join(to, Path.basename(from)), FS.readFileSync(from));
+      return;
     }
     const files = FS.readdirSync(from);
     for (const file of files) {
